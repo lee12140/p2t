@@ -39,6 +39,18 @@ public class P2TLLMService {
 
   private static final Logger logger = LoggerFactory.getLogger(P2TController.class);
 
+  // Configurable base URL for LM Studio (default to localhost:1234)
+  private String lmStudioBaseUrl = "http://localhost:1234";
+
+  /**
+   * Sets the LM Studio base URL. Intended for testing purposes.
+   *
+   * @param baseUrl The base URL to use for LM Studio API calls
+   */
+  void setLmStudioBaseUrl(String baseUrl) {
+    this.lmStudioBaseUrl = baseUrl;
+  }
+
   /**
    * Calls the OpenAI API with the provided text and API details, and extracts the response content.
    *
@@ -145,7 +157,7 @@ public class P2TLLMService {
   private String createCallLmStudio(String body, OpenAiApiDTO dto) {
     try {
       // First try the standard chat completions approach
-      return callLmStudioStandard("http://localhost:1234/v1/chat/completions", body, dto);
+      return callLmStudioStandard(lmStudioBaseUrl + "/v1/chat/completions", body, dto);
     } catch (Exception e) {
       logger.warn("Standard LM Studio chat request failed. Trying alternative approach.", e);
       try {
@@ -225,7 +237,7 @@ public class P2TLLMService {
    * @return The generated response from the LM Studio model.
    */
   private String createCallLmStudioAlternative(String body, OpenAiApiDTO dto) {
-    String apiUrl = "http://localhost:1234/v1/chat/completions"; // Default LM Studio API endpoint
+    String apiUrl = lmStudioBaseUrl + "/v1/chat/completions"; // Default LM Studio API endpoint
 
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
@@ -269,7 +281,7 @@ public class P2TLLMService {
    * @return The generated response from the LM Studio model.
    */
   private String callLmStudioCompletions(String body, OpenAiApiDTO dto) {
-    String apiUrl = "http://localhost:1234/v1/completions"; // LM Studio completions endpoint
+    String apiUrl = lmStudioBaseUrl + "/v1/completions"; // LM Studio completions endpoint
 
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
@@ -512,7 +524,7 @@ public class P2TLLMService {
 
   /** Retrieves models using the v0 API endpoint. */
   private List<String> getLmStudioModelsV0() {
-    String url = "http://localhost:1234/api/v0/models";
+    String url = lmStudioBaseUrl + "/api/v0/models";
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -521,14 +533,17 @@ public class P2TLLMService {
     JSONObject jsonResponse = new JSONObject(response);
     JSONArray models = jsonResponse.getJSONArray("data");
 
-    return models.toList().stream()
-        .map(model -> ((Map<String, Object>) model).get("id").toString())
-        .collect(Collectors.toList());
+    List<String> modelNames = new ArrayList<>();
+    for (int i = 0; i < models.length(); i++) {
+      JSONObject model = models.getJSONObject(i);
+      modelNames.add(model.getString("id"));
+    }
+    return modelNames;
   }
 
   /** Retrieves models using the legacy API endpoint that mimics OpenAI format. */
   private List<String> getLmStudioModelsLegacy() {
-    String url = "http://localhost:1234/v1/models";
+    String url = lmStudioBaseUrl + "/v1/models";
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -537,9 +552,12 @@ public class P2TLLMService {
     JSONObject jsonResponse = new JSONObject(response);
     JSONArray models = jsonResponse.getJSONArray("data");
 
-    return models.toList().stream()
-        .map(model -> ((Map<String, Object>) model).get("id").toString())
-        .collect(Collectors.toList());
+    List<String> modelNames = new ArrayList<>();
+    for (int i = 0; i < models.length(); i++) {
+      JSONObject model = models.getJSONObject(i);
+      modelNames.add(model.getString("id"));
+    }
+    return modelNames;
   }
 
   /**
