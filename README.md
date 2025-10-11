@@ -155,3 +155,4 @@ Working with BPMN or PNML files often involves handling unexpectedly large file 
    - Ensure the LM Studio server is running before starting a translation.
    - If no models are displayed, verify that LM Studio was started correctly and a model is loaded.
    - For connection issues, check if the default URL `http://localhost:1234` is accessible.
+If formatting are identified, run `mvn spotless:apply` to automatically reformat that affected files. 

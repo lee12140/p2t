@@ -112,6 +112,12 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- JSON Logging -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>7.4</version>
+        </dependency>
         <!-- Workspace Dependencies -->
         <dependency>
             <groupId>org.woped.p2t</groupId>
@@ -187,6 +193,18 @@
             <groupId>org.woped.p2t</groupId>
             <artifactId>xml-apis</artifactId>
             <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock.integrations</groupId>
+            <artifactId>wiremock-spring-boot</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -269,21 +287,6 @@
                     </googleJavaFormat>
                 </java>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>spotless-check</id>
-                        <phase>compile</phase>
-                        <goals>
-                        <goal>check</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <goals>
-                        <goal>check</goal>
-                        <goal>apply</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

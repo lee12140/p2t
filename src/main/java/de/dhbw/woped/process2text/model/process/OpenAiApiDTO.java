@@ -5,11 +5,13 @@ public class OpenAiApiDTO {
 
   public OpenAiApiDTO(
       String apiKey, String gptModel, String prompt, String provider, boolean useRag) {
+      String apiKey, String gptModel, String prompt, String provider, boolean useRAG) {
     this.apiKey = apiKey;
     this.gptModel = gptModel;
     this.prompt = prompt;
     this.provider = provider;
     this.useRag = useRag;
+    this.useRAG = useRAG;
   }
 
   private String apiKey;
@@ -17,6 +19,7 @@ public class OpenAiApiDTO {
   private String prompt;
   private String provider;
   private boolean useRag;
+  private boolean useRAG;
 
   public String getApiKey() {
     return apiKey;
@@ -52,5 +55,20 @@ public class OpenAiApiDTO {
 
   public void setProvider(String provider) {
     this.provider = provider;
+  }
+  public String getProvider() {
+    return provider;
+  }
+
+  public void setProvider(String provider) {
+    this.provider = provider;
+  }
+
+  public boolean isUseRAG() {
+    return useRAG;
+  }
+
+  public void setUseRAG(boolean useRAG) {
+    this.useRAG = useRAG;
   }
 }
